@@ -24,8 +24,13 @@ public class AddComment extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String content = req.getParameter("commentContent");
         User user = (User) req.getSession().getAttribute("user");
+        if(user == null){
+            resp.sendRedirect("login");
+            return;
+        }
         Discussion discussion = (Discussion) req.getSession().getAttribute("discussion");
-
+        req.getSession().removeAttribute("discussion");
+        req.getSession().setAttribute("id", Integer.toString(discussion.getDiscussion_id()));
         java.util.Date date = new java.util.Date();
         java.sql.Timestamp sqlTime = new java.sql.Timestamp(date.getTime());
 
