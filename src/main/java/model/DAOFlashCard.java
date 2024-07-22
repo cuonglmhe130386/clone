@@ -6,9 +6,68 @@ import entity.Quiz;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Vector;
 
 public class DAOFlashCard extends DBConnect {
+
+    public boolean checkDuplicate(String question, String answer, String image, String flashcard_id) {
+        String sql = "SELECT COUNT(*) AS count FROM flashcard WHERE question = ? AND answer = ? AND image = ? AND flashcard_id <> ?";
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, question);
+            ps.setString(2, answer);
+            ps.setString(3, image);
+            ps.setString(4, flashcard_id); // Đảm bảo loại trừ flashcard hiện tại trong trường hợp cập nhật
+
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                int count = rs.getInt("count");
+                return count > 0; // Trả về true nếu có bản ghi trùng lặp, ngược lại trả về false
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false; // Mặc định trả về false nếu có lỗi xảy ra
+    }
+    
+    public int updateFlashCard(String question, String answer, String image,String flashcard_id) {
+        String sql = "    UPDATE flashcard \n"
+                + "  Set question = ?, answer = ? , image = ?\n"
+                + "  where flashcard_id = ?";
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, question);
+            ps.setString(2, answer);
+            ps.setString(3, image);
+            ps.setString(4, flashcard_id);
+            return ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return 0;
+        }
+    }
+
+    public ArrayList<FlashCard> getQuizzByCouseID(int course_id) {
+        ArrayList<FlashCard> course = new ArrayList<>();
+        String sql = "  select q.quiz_id,f.flashcard_id,f.question,f.answer,f.create_at,f.update_at\n"
+                + "  from Course c inner join Quiz q \n"
+                + "  on c.course_id = q.course_id \n"
+                + "  inner join flashcard f \n"
+                + "  on q.flashcard_id = f.flashcard_id\n"
+                + "  where c.course_id = ?";
+        try {
+            PreparedStatement ps = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+            ps.setInt(1, course_id);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                course.add(new FlashCard(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6)));
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        return course;
+    }
 
     public Vector<FlashCard> getAllFlashCards() {
         String sql = "select * from flashcard";
@@ -24,8 +83,8 @@ public class DAOFlashCard extends DBConnect {
         }
         return vector;
     }
-    
-        public Vector<FlashCard> getAllFlashCardsByCategoryId(int categoryId) {
+
+    public Vector<FlashCard> getAllFlashCardsByCategoryId(int categoryId) {
         String sql = "select * from flashcard where category_id = ?";
         Vector<FlashCard> vector = new Vector<>();
         try {
@@ -108,7 +167,6 @@ public class DAOFlashCard extends DBConnect {
         return vector;
     }
 
-
     public FlashCard getFlashCardByQuestionNameAndCategory(String question, int categoryId) {
         FlashCard fc = null;
         try {
@@ -125,7 +183,6 @@ public class DAOFlashCard extends DBConnect {
 
         return fc;
     }
-
 
     public Vector<FlashCard> getFlashCardByRandomNumber(int random, int categoryId, String notIn) {
         String sql = "";
@@ -307,8 +364,7 @@ public class DAOFlashCard extends DBConnect {
         }
         return flashcards;
     }
-    
-    
+
     public int updateFlashcard(FlashCard flashcard) {
         String sql = "UPDATE [flashcard] SET question=?, answer=?, update_at=?, active=?, Category_id=?, image=? WHERE flashcard_id=?";
         try {
@@ -326,7 +382,7 @@ public class DAOFlashCard extends DBConnect {
             return 0;
         }
     }
-    
+
     public FlashCard getFlashCardByID2(int flashcard_id) {
         String sql = "select * from [flashcard] where flashcard_id = ?";
         FlashCard flashcard = new FlashCard();
@@ -343,6 +399,20 @@ public class DAOFlashCard extends DBConnect {
         return flashcard;
     }
     
+    public boolean flashcardNameExists(String question, int flashcardId) {
+        String sql = "SELECT COUNT(*) FROM flashcard WHERE question = ? AND flashcard_id != ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, question);
+            ps.setInt(2, flashcardId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 
     public static void main(String[] args) {
         for (FlashCard i : new DAOFlashCard().getFlashCardByRandomNumber(100, 2, "(0)")) {

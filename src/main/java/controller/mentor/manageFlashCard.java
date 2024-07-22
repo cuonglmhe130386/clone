@@ -37,9 +37,14 @@ public class manageFlashCard extends HttpServlet {
             String filterBy = request.getParameter("filterBy");
             String startDate = request.getParameter("startDate");
             String endDate = request.getParameter("endDate");
+            Integer categoryId = null;
+
+            if (request.getParameter("categoryId") != null && !request.getParameter("categoryId").isEmpty()) {
+                categoryId = Integer.parseInt(request.getParameter("categoryId"));
+            }
 
             int page = 1;
-            int pageSize = 8;
+            int pageSize = 6;
             if (request.getParameter("page") != null) {
                 page = Integer.parseInt(request.getParameter("page"));
             }
@@ -48,6 +53,7 @@ public class manageFlashCard extends HttpServlet {
             }
 
             Vector<FlashCard> flashcards;
+            Vector<Category> categories = daoCategory.getAllCategories();
             if (sortType != null && !sortType.isEmpty()) {
                 switch (sortType) {
                     case "newest_created":
@@ -68,8 +74,8 @@ public class manageFlashCard extends HttpServlet {
                 }
             } else if (keyword != null && !keyword.isEmpty()) {
                 flashcards = daoFlashcard.getFlashCardsByQuestion(keyword);
-            } else if (filterBy != null && !filterBy.isEmpty()) {
-                flashcards = daoFlashcard.getFlashCardsByDateRange(startDate, endDate, filterBy);
+            } else if (categoryId != null) {
+                flashcards = daoFlashcard.getAllFlashCardsByCategoryId(categoryId);
             } else {
                 flashcards = daoFlashcard.getAllFlashCards();
             }
@@ -88,6 +94,7 @@ public class manageFlashCard extends HttpServlet {
             request.setAttribute("currentPage", page);
             request.setAttribute("totalPages", totalPages);
             request.setAttribute("pageSize", pageSize);
+            request.setAttribute("categories", categories);
             String queryString = request.getQueryString();
             request.setAttribute("queryString", queryString != null ? queryString.replaceAll("&?page=\\d*", "").replaceAll("&?pageSize=\\d*", "") : "");
 
@@ -99,6 +106,7 @@ public class manageFlashCard extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         DAOFlashCard daoFlashcard = new DAOFlashCard();
+        DAOCategory daoCategory = new DAOCategory();
         String action = request.getParameter("action");
         if ("update".equals(action)) {
             int flashcardId = Integer.parseInt(request.getParameter("flashcard_id"));
@@ -110,9 +118,19 @@ public class manageFlashCard extends HttpServlet {
             int categoryID = Integer.parseInt(request.getParameter("category_id"));
             String image = request.getParameter("image");
 
-            FlashCard flashcard = new FlashCard(flashcardId, question, answer, null, dateLastEdited, active, categoryID, image);
-            daoFlashcard.updateFlashcard(flashcard);
-            response.sendRedirect("manageFlashCard");
+            if (daoFlashcard.flashcardNameExists(question, flashcardId)) {
+                FlashCard flashcard = daoFlashcard.getFlashCardByID2(flashcardId);
+                Vector<Category> categories = daoCategory.getAllCategories();
+                request.setAttribute("errorMessage", "Tên câu hỏi đã tồn tại");
+                request.setAttribute("flashcard", flashcard);
+                request.setAttribute("categories", categories);
+                request.getRequestDispatcher("../view-mentor/manager-flashcard/update-flashcard.jsp").forward(request, response);
+            } else {
+                FlashCard flashcard = new FlashCard(flashcardId, question, answer, null, dateLastEdited, active, categoryID, image);
+                daoFlashcard.updateFlashcard(flashcard);
+                response.sendRedirect("manageFlashCard");
+            }
+
         } else {
             doGet(request, response);
         }

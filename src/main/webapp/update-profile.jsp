@@ -44,53 +44,45 @@
     <body data-spy="scroll" data-target=".site-navbar-target" data-offset="300">
         <jsp:include page="layout/header.jsp" />
 
-        <div
-            class="site-section ftco-subscribe-1 site-blocks-cover pb-4"
-            style="background-image: url('images/bg_1.jpg')"
-            >
+        <div class="site-section">
             <div class="container">
-                <div class="row align-items-end">
-                    <div class="col-lg-7">
-                        <h2 class="mb-0">Từng bước nhỏ, dẫn đến thành công lớn!</h2>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <div class="container rounded bg-white mt-5 mb-5">
-            <div class="row">
-                <div class="col-md-3 border-right">
-                    <div class="d-flex flex-column align-items-center text-center p-3 py-5"><img class="rounded-circle mt-5" width="150px" src="https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png"><span class="font-weight-bold"></span></div>
-                </div>
-                <div class="col-md-5 border-right">
-                    <div class="p-3 py-5">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <h4 class="text-right">Thông tin người dùng</h4>
+                    <a href="homePage">Trang chủ</a>
+                    <span class="mx-3 icon-keyboard_arrow_right"></span>
+                    <span class="current">Thay đổi thông tin</span><br><br>
+                    <div class="row">
+                        <div class="col-md-3 border-right">
+                            <div class="d-flex flex-column align-items-center text-center p-3 py-5"><img class="rounded-circle mt-5" width="150px" src="https://upload.wikimedia.org/wikipedia/commons/9/99/Sample_User_Icon.png"><span class="font-weight-bold"></span></div>
                         </div>
-                        <form action ="updateProfile" method="Post" onsubmit="return validate()">
-                            <div class="row mt-3">
-                                <div class="col-md-12"><label class="labels">Tên người dùng</label><input type="text" class="form-control" placeholder="enter name" name="name" value="${requestScope.users.name}"disabled></div>
-                                <div class="col-md-12"><label class="labels"><label>Giới tính</label>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="radio" id="male" name="gender"value="male" 
-                                                   <c:if test="${requestScope.users.gender == 1}">checked</c:if> required>
-                                                   <label class="form-check-label" for="male">Nam</label>
-                                            </div>
+                        <div class="col-md-5 border-right">
+                            <div class="p-3 py-5">
+                                <div class="d-flex justify-content-between align-items-center mb-3">
+                                    <h4 class="text-right">Thông tin người dùng</h4>
+                                </div>
+                                <form action ="updateProfile" method="Post" onsubmit="return validate()">
+                                    <div class="row mt-3">
+                                        <div class="col-md-12"><label class="labels">Tên người dùng</label><input type="text" class="form-control" placeholder="enter name" name="name" value="${requestScope.users.name}"disabled></div>
+                                    <div class="col-md-12"><label class="labels"><label>Giới tính</label>
                                             <div class="form-check">
-                                                <input class="form-check-input" type="radio" id="female" name="gender"value="female" 
-                                                <c:if test="${requestScope.users.gender == 0}">checked</c:if> required>
-                                                <label class="form-check-label" for="female">Nữ</label>
-                                            </div>
-                                    </div>       
-                                    <div class="col-md-12"><label class="labels">Ngày sinh</label><input type="date" class="form-control" placeholder="enter dob" id="dob" name="dob" value="${requestScope.users.dob}" required></div>
-                                <div class="col-md-12"><label class="labels">Số điện thoại</label><input type="text" class="form-control" placeholder="enter phone" name="phone" value="${requestScope.users.phone}" pattern="[0-9]{10}" required></div>        
-                                <div class="col-md-12"><label class="labels">Email</label><input type="email" class="form-control" placeholder="enter email" name="email" value="${requestScope.users.email}" required disabled></div>
-                                <span id="email-exist-message" style="color:red;"></span>
-                            </div>
-                            <div class="mt-5 text-center">
-                                <input type="submit" value="Lưu thông tin" class="btn btn-primary btn-lg px-5">
-                            </div>
-                        </form> 
+                                                <input class="form-check-input" type="radio" id="male" name="gender"value="male" 
+                                                       <c:if test="${requestScope.users.gender == 1}">checked</c:if> required>
+                                                       <label class="form-check-label" for="male">Nam</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="radio" id="female" name="gender"value="female" 
+                                                    <c:if test="${requestScope.users.gender == 0}">checked</c:if> required>
+                                                    <label class="form-check-label" for="female">Nữ</label>
+                                                </div>
+                                        </div>       
+                                        <div class="col-md-12"><label class="labels">Ngày sinh</label><input type="date" class="form-control" placeholder="enter dob" id="dob" name="dob" value="${requestScope.users.dob}" required></div>
+                                    <div class="col-md-12"><label class="labels">Số điện thoại</label><input type="text" class="form-control" placeholder="enter phone" name="phone" value="${requestScope.users.phone}" pattern="[0-9]{10}" required></div>        
+                                    <div class="col-md-12"><label class="labels">Email</label><input type="email" class="form-control" placeholder="enter email" name="email" value="${requestScope.users.email}" required disabled></div>
+                                    <span id="email-exist-message" style="color:red;"></span>
+                                </div>
+                                <div class="mt-5 text-center">
+                                    <input type="submit" value="Lưu thông tin" class="btn btn-primary btn-lg px-5">
+                                </div>
+                            </form> 
+                        </div>
                     </div>
                 </div>
             </div>
@@ -210,19 +202,56 @@
                                     });
     </script>
 
+    <%--validate email by calline a servlet named email validation--%>
+    <script>
+
+    </script>
+
+
+
+    <%--Validate username by calling a servlet named username validation--%>
+    <script>
+
+    </script>
+
+
+
     <%--Validate dob so that the registerer is at least 10 years old--%>
     <script>
-        var dob = document.getElementById("dob");
-        var today = new Date();
-        var tenYearsAgo = new Date(today.getFullYear() - 10, today.getMonth(), today.getDate());
-        dob.max = tenYearsAgo.toISOString().split('T')[0];
+        document.addEventListener("DOMContentLoaded", function () {
+            var dob = document.getElementById("dob");
+            var today = new Date();
+            var tenYearsAgo = new Date(today.getFullYear() - 10, today.getMonth(), today.getDate());
+            var hundredYearsAgo = new Date(today.getFullYear() - 100, today.getMonth(), today.getDate());
 
+            // Set the maximum and minimum date values for the date input
+            dob.max = tenYearsAgo.toISOString().split('T')[0];
+            dob.min = hundredYearsAgo.toISOString().split('T')[0];
+        });
+    </script>
+
+    <%--Validate username--%>
+    <script>
+        var username = document.getElementById("username");
+        username.addEventListener("input", function () {
+            var usernameRegex = /^[a-zA-Z\d_ ]{6,32}$/g;
+            if (!usernameRegex.test(username.value)) {
+                username.setCustomValidity("Username must be from 6-32 characters and contain only letters, numbers, spaces and underscores!");
+            } else {
+                username.setCustomValidity("");
+            }
+        });
     </script>
 
     <script>
         function validate() {
             let username = document.getElementById("username").value;
             let email = document.getElementById("email").value;
+            let password = document.getElementById("password").value;
+            let confirmPassword = document.getElementById("confirm-password").value;
+            let message = document.getElementById("password-match-message");
+            let email_message = document.getElementById("email-exist-message");
+            let username_message = document.getElementById("username-exist-message");
 
             function checkUsername() {
                 return new Promise((resolve, reject) => {
@@ -269,7 +298,35 @@
                     xhrEmail.send();
                 });
             }
+
+            function checkPassword() {
+                return new Promise((resolve) => {
+                    if (password !== confirmPassword) {
+                        message.textContent = "Passwords do not match!";
+                        resolve(false);
+                    } else {
+                        message.textContent = "";
+                        resolve(true);
+                    }
+                });
+            }
+
+            return Promise.all([checkUsername(), checkEmail(), checkPassword()]).then(results => {
+                return results.every(result => result);
+            }).catch(error => {
+                console.error(error);
+                return false;
+            });
         }
+
+        document.querySelector("form").addEventListener("submit", function (event) {
+            event.preventDefault();
+            validate().then(isValid => {
+                if (isValid) {
+                    this.submit();
+                }
+            });
+        });
     </script>
 </body>
 </html>

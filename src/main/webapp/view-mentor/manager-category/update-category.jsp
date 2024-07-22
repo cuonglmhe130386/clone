@@ -195,12 +195,17 @@
             <!-- Navbar-->
             <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
+                    <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-user fa-fw"></i> <span class="icon-user"></span> ${sessionScope.user.name}
+                    </a>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" href="#!">Xem thông tin</a></li>
-                        <!--<li><a class="dropdown-item" href="#!">Activity Log</a></li>-->
-                        <li><hr class="dropdown-divider" /></li>
-                        <li><a class="dropdown-item" href="#!">Đăng xuất</a></li>
+                        <a class="dropdown-item" href="../userProfile">Thông tin người dùng</a>
+                        <a class="dropdown-item" href="../updateProfile">Thay đổi thông tin</a>
+                        <form action="forgot-password" method="post">
+                            <input type="hidden" name="email" value="${sessionScope.user.email}">
+                            <button type="submit" class="dropdown-item">Đổi mật khẩu</button>
+                        </form>
+                        <a class="dropdown-item" href="../login">Đăng xuất</a>           
                     </ul>
                 </li>
             </ul>
@@ -211,7 +216,7 @@
                     <div class="sb-sidenav-menu">
                         <div class="nav">
                             <div class="sb-sidenav-menu-heading">Core</div>
-                            <a class="nav-link" href="index.html">
+                            <a class="nav-link" href="dashboard">
                                 <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                                 Dashboard
                             </a>
@@ -221,7 +226,7 @@
                                 Xem tất cả
                             </a>
                             <div class="sb-sidenav-menu-heading">Quản lý câu hỏi</div>
-                            <a class="nav-link" href="#">
+                            <a class="nav-link" href="manageFlashCard">
                                 <div class="sb-nav-link-icon"><i class="fa-solid fa-eye"></i></div>
                                 Xem tất cả
                             </a>
@@ -229,12 +234,8 @@
                                 <div class="sb-nav-link-icon"><i class="fa-solid fa-plus"></i></div>
                                 Thêm câu hỏi
                             </a>
-                            <a class="nav-link" href="tables.html">
-                                <div class="sb-nav-link-icon"><i class="fa-solid fa-pen-to-square"></i></div>
-                                Chỉnh sửa câu hỏi
-                            </a>
                             <div class="sb-sidenav-menu-heading">Quản lý khóa học</div>
-                            <a class="nav-link" href="charts.html">
+                            <a class="nav-link" href="manageCourse">
                                 <div class="sb-nav-link-icon"><i class="fa-solid fa-eye"></i></div>
                                 Xem tất cả
                             </a>
@@ -242,24 +243,16 @@
                                 <div class="sb-nav-link-icon"><i class="fa-solid fa-plus"></i></div>
                                 Thêm khóa học
                             </a>
-                            <a class="nav-link" href="tables.html">
-                                <div class="sb-nav-link-icon"><i class="fa-solid fa-pen-to-square"></i></div>
-                                Chỉnh sửa khóa học
-                            </a>
                             <div class="sb-sidenav-menu-heading">Quản lý học sinh</div>
-                            <a class="nav-link" href="charts.html">
+                            <a class="nav-link" href="manageStudent">
                                 <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
-                                Charts
-                            </a>
-                            <a class="nav-link" href="tables.html">
-                                <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
-                                Tables
+                                Xem tất cả
                             </a>
                         </div>
                     </div>
                     <div class="sb-sidenav-footer">
                         <div class="small">Logged in as:</div>
-                        MENTOR
+                        MEMTOR
                     </div>
                 </nav>
             </div>
@@ -278,6 +271,11 @@
                                 <form action="manage-category" method="post">
                                     <input type="hidden" name="action" value="update">
                                     <input type="hidden" name="category_id" value="${category.category_id}">
+                                    <c:if test="${not empty errorMessage}">
+                                        <div class="alert alert-danger" role="alert">
+                                            ${errorMessage}
+                                        </div>
+                                    </c:if>
                                     <div class="form-group">
                                         <label>Tên danh mục</label>
                                         <input type="text" name="category_name" class="form-control" value="${category.category_name}" required>

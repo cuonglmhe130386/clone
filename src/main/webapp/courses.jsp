@@ -42,6 +42,63 @@
                 let form = document.getElementById("f1");
                 form.submit();
             }
+
+            function getUrlParameter(name) {
+                name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+                var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+                var results = regex.exec(location.search);
+                return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+            }
+
+            function updateUrlParameter() {
+                var courseName = document.getElementById('courseName').value;
+                var categoryId = document.getElementById('category_id').value;
+
+                var url = new URL(window.location.href);
+
+                if (courseName) {
+                    url.searchParams.set('course_name', courseName);
+                }
+                if (categoryId) {
+                    url.searchParams.set('category_id', categoryId);
+                }
+
+                window.history.replaceState({}, '', url);
+            }
+
+            function redirectToCourse() {
+                updateUrlParameter();
+                var courseName = document.getElementById('courseName').value;
+                var categoryId = document.getElementById('category_id').value;
+                var url = 'viewcourse?course_name=' + encodeURIComponent(courseName) + '&category_id=' + encodeURIComponent(categoryId);
+                window.location.href = url;
+            }
+
+            function paginate(page) {
+                var courseName = getUrlParameter('course_name');
+                var categoryId = getUrlParameter('category_id');
+                var url = 'viewcourse?page=' + page;
+
+                if (courseName) {
+                    url += '&course_name=' + encodeURIComponent(courseName);
+                }
+                if (categoryId) {
+                    url += '&category_id=' + encodeURIComponent(categoryId);
+                }
+
+                window.location.href = url;
+            }
+
+            window.onload = function () {
+                var courseName = getUrlParameter('course_name');
+                var categoryId = getUrlParameter('category_id');
+                if (courseName) {
+                    document.getElementById('courseName').value = courseName;
+                }
+                if (categoryId) {
+                    document.getElementById('category_id').value = categoryId;
+                }
+            }
         </script>
     </head>
 
@@ -61,94 +118,67 @@
 
             <%@include file="layout/header.jsp" %>
 
+            <div class="site-section">           
+                <div class="container">    
+                    <a href="index.jsp">Trang chủ</a>
+                    <span class="mx-3 icon-keyboard_arrow_right"></span>
+                    <a class="current">Khóa học</a>
+                    <h2 class="mt-6"><a href="courseEnroll" class="btn btn-primary">Ấn để xem các khóa học đã đăng kí</a> </h2> 
+                    <p></p>
+                    <p></p>
 
-            <div
-                class="site-section ftco-subscribe-1 site-blocks-cover pb-4"
-                style="background-image: url('images/bg_1.jpg')"
-                >
-                <div class="container">
-                    <div class="row align-items-end">
-                        <div class="col-lg-7">
-                            <h2 class="mb-0">Từng bước nhỏ, dẫn đến thành công lớn!</h2>
+                    <div class="container">
+                        <div class="row mb-4">
+                            <div class="col-lg-6">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" placeholder="Nhập tên khóa học" id="courseName" oninput="updateUrlParameter()">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-primary" type="button" onclick="redirectToCourse()">Tìm kiếm</button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-
-            <div class="custom-breadcrumns border-bottom">
-                <div class="container">
-                    <a href="index.html">Home</a>
-                    <span class="mx-3 icon-keyboard_arrow_right"></span>
-                    <span class="current">Courses</span>
-                </div>
-            </div>         
-
-            <div class="site-section">
-                <div class="container">
-                    <a href="courseEnroll" class="btn btn-primary">Các khóa học đã đăng kí</a>
-                    <h2 class="mt-6">Các khóa học</h2>
-                    <p></p>
-                    <p></p>
 
                     <div class="container">
                         <div class="row mb-4">
                             <div class="col-lg-6">
-                                <form id="searchForm" action="viewcourse" method="Post">
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" placeholder="Nhập tên khóa học" name="course_name">
-                                        <div class="input-group-append">
-                                            <button class="btn btn-primary" type="submit">Tìm kiếm</button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div> 
-
-                    <div class="container">
-                        <div class="row mb-4">
-                            <div class="col-lg-6">
-                                <form id="f1" action="viewcourse" method="Post">
-                                    <div class="input-group">
-                                        <select class="form-control" name="category_id" id="category_id" onchange="getOnclick()"> 
-                                            <option value="0">Tổng hợp</option>
-                                            <c:forEach items="${requestScope.category}" var="category" varStatus="loop" >
-                                                <option 
-                                                    <c:if test="${requestScope.selected==category.category_id}">
-                                                        selected
-                                                    </c:if>
-                                                    value="${category.category_id}">${category.category_name}</option>      
-                                            </c:forEach> 
-                                        </select>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div> 
-
-                    <div class="site-section">
-                        <div class="container">
-                            <div class="row">
-                                <c:forEach items="${requestScope.course}" var="course">
-                                    <div class="col-lg-4 col-md-6 mb-4">
-                                        <div class="course-1-item">
-                                            <figure class="thumnail">
-                                                <div class="category"><h3>${course.course_name}</h3></div>  
-                                            </figure>
-                                            <div class="course-1-content pb-4">
-                                                <h2>${course.description}</h2>
-                                                <p><a href="course-detail?course_id=${course.course_id}" class="btn btn-primary rounded-0 px-4">Xem chi tiết</a></p>                               
-                                            </div>
-                                        </div>
-                                    </div>
-                                </c:forEach>    
-                                <div class="text-center" style="display: inline-block; margin-right:auto; width: 100%">
-
-                                    <c:forEach var="i" begin="1" end="${numPages}">
-                                        <a href="viewcourse?page=${i}" class="btn btn-outline-dark ${i == page ? 'active' : ''}" >${i}</a>
-                                    </c:forEach>
+                                <div class="input-group">
+                                    <select class="form-control" name="category_id" id="category_id" onchange="redirectToCourse()"> 
+                                        <option value="0">Tổng hợp</option>
+                                        <c:forEach items="${requestScope.category}" var="category" varStatus="loop">
+                                            <option 
+                                                <c:if test="${requestScope.selected==category.category_id}">
+                                                    selected
+                                                </c:if>
+                                                value="${category.category_id}">${category.category_name}</option>      
+                                        </c:forEach> 
+                                    </select>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
 
+
+                    <div class="container">
+                        <div class="row">
+                            <c:forEach items="${requestScope.course}" var="course">
+                                <div class="col-lg-4 col-md-6 mb-4">
+                                    <div class="course-1-item">
+                                        <figure class="thumnail">
+                                            <div class="category"><h3>${course.course_name}</h3></div>  
+                                        </figure>
+                                        <div class="course-1-content pb-4">
+                                            <h2>${course.description}</h2>
+                                            <p><a href="course-detail?course_id=${course.course_id}" class="btn btn-primary rounded-0 px-4">Xem chi tiết</a></p>                               
+                                        </div>
+                                    </div>
+                                </div>
+                            </c:forEach>    
+                            <div class="text-center" style="display: inline-block; margin-right:auto; width: 100%">
+                                <c:forEach var="i" begin="1" end="${numPages}">
+                                    <a href="javascript:void(0)" class="btn btn-outline-dark ${i == page ? 'active' : ''}" onclick="paginate(${i})">${i}</a>
+                                </c:forEach>
                             </div>
                         </div>
                     </div>
@@ -268,10 +298,6 @@
         <script src="js/jquery.fancybox.min.js"></script>
         <script src="js/jquery.sticky.js"></script>
         <script src="js/jquery.mb.YTPlayer.min.js"></script>
-
-
-
-
         <script src="js/main.js"></script>
 
     </body>

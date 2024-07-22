@@ -40,36 +40,24 @@
 
             <%@include file="layout/header.jsp" %>
 
-            <div class="site-section ftco-subscribe-1 site-blocks-cover pb-4" style="background-image: url('images/bg_1.jpg')">
+            <div class="site-section">
                 <div class="container">
-                    <div class="row align-items-end">
-                        <div class="col-lg-7">
-                            <h2 class="mb-0">Courses</h2>
-                            <p>Lorem ipsum dolor sit amet consectetur adipisicing.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="custom-breadcrumns border-bottom">
-                <div class="container">
-                    <a href="index.html">Home</a>
+                    <a href="homePage">Home</a>
                     <span class="mx-3 icon-keyboard_arrow_right"></span>
                     <a href="viewcourse">Courses</a>
                     <span class="mx-3 icon-keyboard_arrow_right"></span>
-                    <span class="current">Các khóa học đã đăng kí</span>
-                </div>
-            </div>
-
-            <div class="site-section">
-                <div class="container">
+                    <span class="current">Các khóa học đã đăng kí</span><br><br>
                     <a href="courseStudying" class="btn btn-primary">Các khóa học đang học</a>
+
                     <a href="courseCompleted" class="btn btn-primary">Các khóa học đã hoàn thành</a>
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <h2>Các khóa học đã đăng kí</h2>
                         <form action="courseEnroll" method="GET" class="form-inline">
                             <div class="input-group">
                                 <input type="text" class="form-control" placeholder="Nhập tên khóa học" name="courseName" value="${courseName}">
+                                <c:forEach items="${categoryNames}" var="selectedCategory">
+                                    <input type="hidden" name="categoryName" value="${selectedCategory}">
+                                </c:forEach>
                                 <div class="input-group-append">
                                     <button class="btn btn-primary" type="submit">Tìm kiếm</button>
                                 </div>
@@ -81,29 +69,30 @@
                         <div class="col-md-12">
                             <div class="row">
                                 <div class="col-md-3">
-                                <h3>Danh mục</h3>
-                                <form action="courseEnroll" method="GET">
-                                    <c:forEach items="${categories}" var="category">
-                                        <div class="form-check">
-                                            <c:set var="isChecked" value="false" />
-                                            <c:if test="${not empty categoryNames}">
-                                                <c:forEach items="${categoryNames}" var="selectedCategory">
-                                                    <c:if test="${selectedCategory eq category.category_name}">
-                                                        <c:set var="isChecked" value="true" />
-                                                    </c:if>
-                                                </c:forEach>
-                                            </c:if>
-                                            <input class="form-check-input" type="checkbox" name="categoryName"
-                                                value="${category.category_name}" id="category${category.category_id}"
-                                                ${isChecked ? 'checked' : ''}>
-                                            <label class="form-check-label" for="category${category.category_id}">
-                                                ${category.category_name}
-                                            </label>
-                                        </div>
-                                    </c:forEach>
-                                    <button class="btn btn-primary mt-3" type="submit">Lọc</button>
-                                </form>
-                            </div>
+                                    <h3>Danh mục</h3>
+                                    <form action="courseEnroll" method="GET">
+                                        <input type="hidden" name="courseName" value="${courseName}">
+                                        <c:forEach items="${categories}" var="category">
+                                            <div class="form-check">
+                                                <c:set var="isChecked" value="false" />
+                                                <c:if test="${not empty categoryNames}">
+                                                    <c:forEach items="${categoryNames}" var="selectedCategory">
+                                                        <c:if test="${selectedCategory eq category.category_name}">
+                                                            <c:set var="isChecked" value="true" />
+                                                        </c:if>
+                                                    </c:forEach>
+                                                </c:if>
+                                                <input class="form-check-input" type="checkbox" name="categoryName"
+                                                       value="${category.category_name}" id="category${category.category_id}"
+                                                       ${isChecked ? 'checked' : ''}>
+                                                <label class="form-check-label" for="category${category.category_id}">
+                                                    ${category.category_name}
+                                                </label>
+                                            </div>
+                                        </c:forEach>
+                                        <button class="btn btn-primary mt-3" type="submit">Lọc</button>
+                                    </form>
+                                </div>
                                 <div class="col-md-9">
                                     <div class="row">
                                         <c:forEach items="${courses}" var="course">

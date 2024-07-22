@@ -40,6 +40,22 @@
         <servlet-name>mentorProfile</servlet-name>
         <servlet-class>controller.mentor.mentorProfile</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>editCourse</servlet-name>
+        <servlet-class>controller.mentor.editCourse</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>manageCourse</servlet-name>
+        <servlet-class>controller.mentor.manageCourse</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>manageStudent</servlet-name>
+        <servlet-class>controller.mentor.manageStudent</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>viewStudent</servlet-name>
+        <servlet-class>controller.mentor.viewStudent</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>testCategory</servlet-name>
         <url-pattern>/testCategory</url-pattern>
@@ -79,5 +95,21 @@
     <servlet-mapping>
         <servlet-name>mentorProfile</servlet-name>
         <url-pattern>/mentorProfile</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>editCourse</servlet-name>
+        <url-pattern>/mentor/editCourse</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>manageCourse</servlet-name>
+        <url-pattern>/mentor/manageCourse</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>manageStudent</servlet-name>
+        <url-pattern>/mentor/manageStudent</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>viewStudent</servlet-name>
+        <url-pattern>/mentor/viewStudent</url-pattern>
     </servlet-mapping>
 </web-app>
